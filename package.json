@@ -1,0 +1,28 @@
+{
+    "name": "notion-dynamic-icon",
+    "version": "1.0.0",
+    "description": "为Notion提供动态SVG图标服务",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "notion",
+      "icon",
+      "svg",
+      "dynamic"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "dependencies": {
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.22"
+    },
+    "engines": {
+      "node": ">=14.x"
+    }
+  }
