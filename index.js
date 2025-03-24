@@ -220,13 +220,13 @@ function generateSVG(type, content, color, date) {
         
         if (displayLength <= 3) {
             // 1-3个字符，单行显示，垂直居中
-            fontSize = displayLength === 1 ? 280 : (displayLength === 2 ? 220 : 160);
+            fontSize = displayLength === 1 ? 360 : (displayLength === 2 ? 240 : 160);
             textContent = displayText;
             
             // 单行文本居中
             svgContent += `
               <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
-              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="500" fill="${headerColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
               <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>`;
         } else {
             // 4-6个字符，分成两行显示
@@ -242,10 +242,10 @@ function generateSVG(type, content, color, date) {
               <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
               
               <!-- 第一行文本 -->
-              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="500" fill="${headerColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
               
               <!-- 第二行文本 -->
-              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="500" fill="${headerColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
               
               <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>`;
         }
