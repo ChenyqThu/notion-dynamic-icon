@@ -31,6 +31,10 @@ function getDateInfo(dateStr) {
   const pastDaysOfYear = Math.floor((date - firstDayOfYear) / 86400000);
   const weekNum = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   
+  // 计算季度
+  const quarter = Math.ceil(month / 3);
+  const cnQuarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+  
   // 格式化月和日（补零）
   const formattedMonth = month < 10 ? `0${month}` : `${month}`;
   const formattedDay = day < 10 ? `0${day}` : `${day}`;
@@ -52,6 +56,8 @@ function getDateInfo(dateStr) {
     day,
     weekday,
     weekNum,
+    quarter,
+    cnQuarter: cnQuarters[quarter - 1],
     formattedMonth,
     formattedDay,
     cnMonth: cnMonths[month - 1],
@@ -139,9 +145,8 @@ function generateSVG(type, content, color, date) {
           <circle cx="376" cy="136" r="14"/>
           <circle cx="376" cy="94" r="14"/>
       </g>
-      <text id="monthtext" x="256" y="160" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="80px" style="text-anchor: middle">月份</text>
-      <text id="monthnum" x="256" y="340" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="240px" style="text-anchor: middle">${dateInfo.month}</text>
-      <text id="year" x="256" y="460" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="60px" style="text-anchor: middle">${dateInfo.year}</text>`;
+      <text id="year" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.year}</text>
+      <text id="monthName" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="180px" style="text-anchor: middle">${dateInfo.cnMonth}</text>`;
       break;
     
     case 'year':
@@ -155,11 +160,25 @@ function generateSVG(type, content, color, date) {
           <circle cx="376" cy="136" r="14"/>
           <circle cx="376" cy="94" r="14"/>
       </g>
-      <text id="yeartext" x="256" y="160" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="80px" style="text-anchor: middle">年份</text>
-      <text id="yearnum" x="256" y="380" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="200px" style="text-anchor: middle">${dateInfo.year}</text>`;
+      <text id="yearnum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="200px" style="text-anchor: middle">${dateInfo.year}</text>`;
       break;
     
-      case 'text':
+    case 'quarter':
+      // 添加装饰圆点
+      svgContent += `
+      <g fill="${accentColor}">
+          <circle cx="462" cy="136" r="14"/>
+          <circle cx="462" cy="94" r="14"/>
+          <circle cx="419" cy="136" r="14"/>
+          <circle cx="419" cy="94" r="14"/>
+          <circle cx="376" cy="136" r="14"/>
+          <circle cx="376" cy="94" r="14"/>
+      </g>
+      <text id="year" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.year}</text>
+      <text id="quarterName" x="256" y="440" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="280px" style="text-anchor: middle">${dateInfo.cnQuarter}</text>`;
+      break;
+    
+    case 'text':
         // 根据文本长度调整字体大小和布局
         const text = content || 'TEXT';
         const textLength = text.length;
