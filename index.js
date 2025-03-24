@@ -81,24 +81,6 @@ function generateSVG(type, content, color, date) {
     return { error: "无效的日期格式" };
   }
   
-  // 如果是渐变测试，直接返回一个简单的渐变测试示例
-  if (type === 'gradient-test') {
-    const colors = color && color.includes('+') ? color.split('+') : ['#ff0000', '#0000ff'];
-    const startColor = getColorValue(colors[0].trim());
-    const endColor = getColorValue(colors[1].trim());
-    
-    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 512 512">
-      <defs>
-        <linearGradient id="testGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="${startColor}" />
-          <stop offset="100%" stop-color="${endColor}" />
-        </linearGradient>
-      </defs>
-      <rect x="0" y="0" width="512" height="512" fill="url(#testGradient)" />
-      <text x="256" y="256" text-anchor="middle" fill="white" font-size="24">渐变测试</text>
-    </svg>`;
-  }
-  
   // 设置颜色
   let headerColor = '#cf5659'; // 默认红色
   let accentColor = '#f3aab9'; // 默认点缀色
@@ -106,9 +88,9 @@ function generateSVG(type, content, color, date) {
   let gradientDef = '';
   
   // 处理颜色设置
-  if (color && color.includes('+')) {
+  if (color && color.includes(',')) {
     // 处理渐变色
-    const colors = color.split('+');
+    const colors = color.split(',');
     if (colors.length >= 2) {
       const startColor = getColorValue(colors[0].trim());
       const endColor = getColorValue(colors[1].trim());
@@ -462,7 +444,7 @@ app.get('/info', (req, res) => {
     </div>
     <div class="example">
       <p>3. 显示蓝色到粉色渐变的季度:</p>
-      <p><a href="/?type=quarter&color=blue+pink" target="_blank">${req.protocol}://${req.get('host')}/?type=quarter&color=blue+pink</a></p>
+      <p><a href="/?type=quarter&color=blue,pink" target="_blank">${req.protocol}://${req.get('host')}/?type=quarter&color=blue,pink</a></p>
     </div>
     <div class="example">
       <p>4. 显示绿色主题的自定义文字:</p>
