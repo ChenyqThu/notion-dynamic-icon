@@ -26,6 +26,9 @@ function getDateInfo(dateStr) {
   const day = date.getDate();
   const weekday = date.getDay();
   
+  // 获取年份后两位
+  const shortYear = year.toString().slice(-2);
+  
   // 周数计算 (ISO标准，每年第一个星期四所在的周为第1周)
   const firstDayOfYear = new Date(year, 0, 1);
   const pastDaysOfYear = Math.floor((date - firstDayOfYear) / 86400000);
@@ -34,6 +37,9 @@ function getDateInfo(dateStr) {
   // 计算季度
   const quarter = Math.ceil(month / 3);
   const cnQuarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+  
+  // 年份+季度组合
+  const yearQuarter = `${shortYear}${cnQuarters[quarter - 1]}`;
   
   // 格式化月和日（补零）
   const formattedMonth = month < 10 ? `0${month}` : `${month}`;
@@ -57,6 +63,8 @@ function getDateInfo(dateStr) {
     weekday,
     weekNum,
     quarter,
+    shortYear,
+    yearQuarter,
     cnQuarter: cnQuarters[quarter - 1],
     formattedMonth,
     formattedDay,
@@ -130,7 +138,7 @@ function generateSVG(type, content, color, date) {
           <circle cx="376" cy="136" r="14"/>
           <circle cx="376" cy="94" r="14"/>
       </g>
-      <text id="year" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="122px" style="text-anchor: left">${dateInfo.year}</text>
+      <text id="yearq" x="256" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: middle">${dateInfo.yearQuarter}</text>
       <text id="weekNum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="184px" style="text-anchor: middle">${dateInfo.weekNum}周</text>`;
       break;
     
@@ -253,6 +261,21 @@ function generateSVG(type, content, color, date) {
       <text id="month-day" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', 'Arial'" font-size="78" font-weight="normal" fill="#FFFFFF"><tspan x="54" y="160">${formattedTargetMonth}-${formattedTargetDay}</tspan></text>
       <text id="desc" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', 'Arial'" font-size="62" font-weight="normal" fill="#FFFFFF"><tspan x="334" y="153">还有</tspan></text>
       <text id="days" x="256" y="440" fill="#66757F" fill-rule="nonzero" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="260" font-weight="normal" style="text-anchor: middle">${daysLeft}</text>`;
+      break;
+    
+    case 'weekq':
+      // 添加装饰圆点
+      svgContent += `
+      <g fill="${accentColor}">
+          <circle cx="462" cy="136" r="14"/>
+          <circle cx="462" cy="94" r="14"/>
+          <circle cx="419" cy="136" r="14"/>
+          <circle cx="419" cy="94" r="14"/>
+          <circle cx="376" cy="136" r="14"/>
+          <circle cx="376" cy="94" r="14"/>
+      </g>
+      <text id="yearq" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.yearQuarter}</text>
+      <text id="weekNum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="184px" style="text-anchor: middle">${dateInfo.weekNum}周</text>`;
       break;
     
     default:
