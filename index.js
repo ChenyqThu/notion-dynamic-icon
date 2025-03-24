@@ -161,23 +161,29 @@ function generateSVG(type, content, color, date) {
   }
   
   // 添加基础图形
-  svgContent += `
+  backGroud = `
     <path d="m512,455c0,32 -25,57 -57,57l-398,0c-32,0 -57,-25 -57,-57l0,-327c0,-31 25,-57 57,-57l398,0c32,0 57,26 57,57l0,327z" fill="#efefef"/>
     <path d="m484,0l-47,0l-409,0c-15,0 -28,13 -28,28l0,157l512,0l0,-157c0,-15 -13,-28 -28,-28z" fill="${headerColor}"/>`;
+
+  // 装饰圆点
+  colorDots = `
+    <g fill="${accentColor}">
+        <circle cx="462" cy="136" r="14"/>
+        <circle cx="462" cy="94" r="14"/>
+        <circle cx="419" cy="136" r="14"/>
+        <circle cx="419" cy="94" r="14"/>
+        <circle cx="376" cy="136" r="14"/>
+        <circle cx="376" cy="94" r="14"/>
+    </g>
+  `
   
   // 根据类型添加不同内容
   switch (type) {
     case 'day':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="month" x="32" y="142" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="100px" style="text-anchor: left">${dateInfo.cnMonth}</text>
       <text id="day" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="256px" style="text-anchor: middle">${dateInfo.day}</text>
       <text id="weekday" x="256" y="480" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="64px" style="text-anchor: middle">${dateInfo.cnWeekday}</text>`;
@@ -185,59 +191,35 @@ function generateSVG(type, content, color, date) {
     
     case 'week':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
-      <text id="yearq" x="256" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: middle">${dateInfo.yearQuarter}</text>
+      <text id="yearq" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.year}</text>
       <text id="weekNum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="184px" style="text-anchor: middle">${dateInfo.weekNum}周</text>`;
       break;
     
     case 'month':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="year" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.year}</text>
       <text id="monthName" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="180px" style="text-anchor: middle">${dateInfo.cnMonth}</text>`;
       break;
     
     case 'year':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="yearnum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="200px" style="text-anchor: middle">${dateInfo.year}</text>`;
       break;
     
     case 'quarter':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="year" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.year}</text>
       <text id="quarterName" x="256" y="440" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="280px" style="text-anchor: middle">${dateInfo.cnQuarter}</text>`;
       break;
@@ -260,14 +242,10 @@ function generateSVG(type, content, color, date) {
             textContent = displayText;
             
             // 单行文本居中
-            svgContent = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 508 506" version="1.1">
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <g transform="translate(0.000000, 2.000000)">
-                      <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
-                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>
-                  </g>
-              </g>`;
+            svgContent += `
+              <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
+              <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>`;
         } else {
             // 4-6个字符，分成两行显示
             fontSize = displayLength < 5 ? 180 : 140;
@@ -278,20 +256,16 @@ function generateSVG(type, content, color, date) {
             const secondLine = displayText.substring(firstLineLength);
             
             // 多行文本居中 - 使用不同的方法构建SVG
-            svgContent = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 508 506" version="1.1">
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <g transform="translate(0.000000, 2.000000)">
-                      <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
-                      
-                      <!-- 第一行文本 -->
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
-                      
-                      <!-- 第二行文本 -->
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
-                      
-                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>
-                  </g>
-              </g>`;
+            svgContent += `
+              <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
+              
+              <!-- 第一行文本 -->
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
+              
+              <!-- 第二行文本 -->
+              <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
+              
+              <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>`;
         }
         break;
     
@@ -301,9 +275,6 @@ function generateSVG(type, content, color, date) {
         return { error: "pass类型需要指定目标日期" };
       }
       
-      // 为pass类型移除SVG中的圆点
-      svgContent = svgContent.replace(/<g fill="${accentColor}">[\s\S]*?<\/g>/g, '');
-      
       const targetDate = new Date(date);
       const targetYear = targetDate.getFullYear();
       const targetMonth = targetDate.getMonth() + 1;
@@ -312,6 +283,7 @@ function generateSVG(type, content, color, date) {
       const formattedTargetDay = targetDay < 10 ? `0${targetDay}` : `${targetDay}`;
       const daysLeft = dateInfo.getDaysUntil(date);
       
+      svgContent += backGroud
       svgContent += `
       <text id="year" fill="#FFFFFF" fill-rule="nonzero" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="62" font-weight="normal"><tspan x="54" y="82">${targetYear}</tspan></text>
       <text id="month-day" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', 'Arial'" font-size="78" font-weight="normal" fill="#FFFFFF"><tspan x="54" y="160">${formattedTargetMonth}-${formattedTargetDay}</tspan></text>
@@ -321,30 +293,18 @@ function generateSVG(type, content, color, date) {
     
     case 'weekq':
       // 添加装饰圆点
+      svgContent += backGroud
+      svgContent += colorDots
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="yearq" x="32" y="150" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="120px" style="text-anchor: left">${dateInfo.yearQuarter}</text>
       <text id="weekNum" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="184px" style="text-anchor: middle">${dateInfo.weekNum}周</text>`;
       break;
     
     default:
+      svgContent += backGroud
+      svgContent += colorDots
       // 默认使用day类型
       svgContent += `
-      <g fill="${accentColor}">
-          <circle cx="462" cy="136" r="14"/>
-          <circle cx="462" cy="94" r="14"/>
-          <circle cx="419" cy="136" r="14"/>
-          <circle cx="419" cy="94" r="14"/>
-          <circle cx="376" cy="136" r="14"/>
-          <circle cx="376" cy="94" r="14"/>
-      </g>
       <text id="month" x="32" y="142" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="100px" style="text-anchor: left">${dateInfo.cnMonth}</text>
       <text id="day" x="256" y="400" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="256px" style="text-anchor: middle">${dateInfo.day}</text>
       <text id="weekday" x="256" y="480" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="64px" style="text-anchor: middle">${dateInfo.cnWeekday}</text>`;
