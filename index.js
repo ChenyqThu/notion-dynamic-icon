@@ -81,35 +81,91 @@ function generateSVG(type, content, color, date) {
     return { error: "无效的日期格式" };
   }
   
-  // 根据传入的颜色设置填充色和点缀色
-  let fillColor = '#cf5659'; // 默认红色
-  let accentColor = '#f3aab9'; // 默认点缀色
-  
-  switch (color) {
-    case 'green':
-      fillColor = '#3cb371';
-      accentColor = '#a0d9b4';
-      break;
-    case 'pink':
-      fillColor = '#ff69b4';
-      accentColor = '#ffb6e1';
-      break;
-    case 'yellow':
-      fillColor = '#ffd700';
-      accentColor = '#ffe97f';
-      break;
-    case 'blue':
-      fillColor = '#5aa9e6';
-      accentColor = '#3a79b6';
-      break;
+  // 如果是渐变测试，直接返回一个简单的渐变测试示例
+  if (type === 'gradient-test') {
+    const colors = color && color.includes('+') ? color.split('+') : ['#ff0000', '#0000ff'];
+    const startColor = getColorValue(colors[0].trim());
+    const endColor = getColorValue(colors[1].trim());
+    
+    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 512 512">
+      <defs>
+        <linearGradient id="testGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${startColor}" />
+          <stop offset="100%" stop-color="${endColor}" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="512" height="512" fill="url(#testGradient)" />
+      <text x="256" y="256" text-anchor="middle" fill="white" font-size="24">渐变测试</text>
+    </svg>`;
   }
   
-  // SVG基础模板
-  let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Calendar" role="img" viewBox="0 0 512 512" width="100%" height="100%" style="cursor: default">
-    <path d="m512,455c0,32 -25,57 -57,57l-398,0c-32,0 -57,-25 -57,-57l0,-327c0,-31 25,-57 57,-57l398,0c32,0 57,26 57,57l0,327z" fill="#efefef"/>
-    <path d="m484,0l-47,0l-409,0c-15,0 -28,13 -28,28l0,157l512,0l0,-157c0,-15 -13,-28 -28,-28z" fill="${fillColor}"/>`;
+  // 设置颜色
+  let headerColor = '#cf5659'; // 默认红色
+  let accentColor = '#f3aab9'; // 默认点缀色
+  let gradientHeader = false;
+  let gradientDef = '';
   
-  // 根据类型生成不同内容
+  // 处理颜色设置
+  if (color && color.includes('+')) {
+    // 处理渐变色
+    const colors = color.split('+');
+    if (colors.length >= 2) {
+      const startColor = getColorValue(colors[0].trim());
+      const endColor = getColorValue(colors[1].trim());
+      accentColor = lightenColor(endColor, 30);
+      
+      // 为每个实例创建唯一ID，防止缓存问题
+      const gradientId = `gradient_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+      
+      // 设置渐变标志和定义
+      gradientHeader = true;
+      gradientDef = `
+      <defs>
+        <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${startColor}" />
+          <stop offset="100%" stop-color="${endColor}" />
+        </linearGradient>
+      </defs>`;
+      
+      // 引用渐变
+      headerColor = `url(#${gradientId})`;
+    }
+  } else {
+    // 单色处理
+    switch (color) {
+      case 'green':
+        headerColor = '#3cb371';
+        accentColor = '#a0d9b4';
+        break;
+      case 'pink':
+        headerColor = '#ff69b4';
+        accentColor = '#ffb6e1';
+        break;
+      case 'yellow':
+        headerColor = '#ffd700';
+        accentColor = '#ffe97f';
+        break;
+      case 'blue':
+        headerColor = '#5aa9e6';
+        accentColor = '#3a79b6';
+        break;
+    }
+  }
+  
+  // 直接构建完整SVG
+  let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Calendar" role="img" viewBox="0 0 512 512" width="100%" height="100%" style="cursor: default">`;
+  
+  // 插入渐变定义(必须在使用前定义)
+  if (gradientHeader) {
+    svgContent += gradientDef;
+  }
+  
+  // 添加基础图形
+  svgContent += `
+    <path d="m512,455c0,32 -25,57 -57,57l-398,0c-32,0 -57,-25 -57,-57l0,-327c0,-31 25,-57 57,-57l398,0c32,0 57,26 57,57l0,327z" fill="#efefef"/>
+    <path d="m484,0l-47,0l-409,0c-15,0 -28,13 -28,28l0,157l512,0l0,-157c0,-15 -13,-28 -28,-28z" fill="${headerColor}"/>`;
+  
+  // 根据类型添加不同内容
   switch (type) {
     case 'day':
       // 添加装饰圆点
@@ -208,8 +264,8 @@ function generateSVG(type, content, color, date) {
               <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g transform="translate(0.000000, 2.000000)">
                       <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${fillColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
-                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${fillColor}" fill-rule="nonzero"/>
+                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" dominant-baseline="central" x="252" y="290">${textContent}</text>
+                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>
                   </g>
               </g>`;
         } else {
@@ -228,12 +284,12 @@ function generateSVG(type, content, color, date) {
                       <path d="M504,448.085714 C504,479.47619 479.390625,504 447.890625,504 L56.109375,504 C24.609375,504 0,479.47619 0,448.085714 L0,127.314286 C0,107.04127 0,87.9365079 0,70 L504,70 C504,87.9365079 504,107.04127 504,127.314286 L504,448.085714 Z" fill="#EFEFEF" fill-rule="nonzero"/>
                       
                       <!-- 第一行文本 -->
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${fillColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
+                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 - fontSize * 0.25}">${firstLine}</text>
                       
                       <!-- 第二行文本 -->
-                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${fillColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
+                      <text font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="${fontSize}" font-weight="400" fill="${headerColor}" text-anchor="middle" x="252" y="${310 + fontSize * 0.75}">${secondLine}</text>
                       
-                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${fillColor}" fill-rule="nonzero"/>
+                      <path d="M476.4375,0 L430.171875,0 L27.5625,0 C12.796875,0 0,11.8976351 0,25.6256757 L0,75 L504,75 L504,25.6256757 C504,11.8976351 491.203125,0 476.4375,0 Z" fill="${headerColor}" fill-rule="nonzero"/>
                   </g>
               </g>`;
         }
@@ -294,10 +350,82 @@ function generateSVG(type, content, color, date) {
       <text id="weekday" x="256" y="480" fill="#66757f" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="64px" style="text-anchor: middle">${dateInfo.cnWeekday}</text>`;
   }
   
-  // 关闭SVG标签
-  svgContent += `\n</svg>`;
-  
+  // 结束SVG
+  svgContent += `</svg>`;
   return svgContent;
+}
+
+// 获取颜色值，支持命名颜色和十六进制值
+function getColorValue(color) {
+  // 处理已命名的颜色
+  const colorMap = {
+    'red': '#cf5659',
+    'green': '#3cb371',
+    'pink': '#ed6ea0',
+    'yellow': '#ffd700',
+    'blue': '#5aa9e6',
+    'cyan': '#00ffff',
+    'purple': '#800080',
+    'orange': '#ffa500',
+    'lime': '#00ff00',
+    'teal': '#008080'
+  };
+  
+  // 如果是预定义颜色，返回其十六进制值
+  if (colorMap[color.toLowerCase()]) {
+    return colorMap[color.toLowerCase()];
+  }
+  
+  // 如果已经是十六进制格式，直接返回
+  if (color.startsWith('#')) {
+    return color;
+  }
+  
+  // 尝试解析为十六进制
+  try {
+    // 支持简写，如"f00"转为"#ff0000"
+    if (/^[0-9a-f]{3}$/i.test(color)) {
+      const r = color.charAt(0);
+      const g = color.charAt(1);
+      const b = color.charAt(2);
+      return `#${r}${r}${g}${g}${b}${b}`;
+    }
+    
+    // 支持6位十六进制
+    if (/^[0-9a-f]{6}$/i.test(color)) {
+      return `#${color}`;
+    }
+  } catch (e) {
+    // 解析失败时返回默认红色
+    return '#cf5659';
+  }
+  
+  // 默认返回红色
+  return '#cf5659';
+}
+
+// 函数用于使颜色变亮
+function lightenColor(hex, percent) {
+  // 去掉#号
+  hex = hex.replace('#', '');
+  
+  // 将十六进制转换为RGB
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  
+  // 使颜色变亮
+  const lightenR = Math.min(255, r + (255 - r) * percent / 100);
+  const lightenG = Math.min(255, g + (255 - g) * percent / 100);
+  const lightenB = Math.min(255, b + (255 - b) * percent / 100);
+  
+  // 转回十六进制
+  const lightenHex = '#' + 
+    Math.round(lightenR).toString(16).padStart(2, '0') +
+    Math.round(lightenG).toString(16).padStart(2, '0') +
+    Math.round(lightenB).toString(16).padStart(2, '0');
+  
+  return lightenHex;
 }
 
 // 设置主页路由显示使用说明
@@ -340,13 +468,13 @@ app.get('/info', (req, res) => {
       <tr>
         <td>type</td>
         <td>图标类型</td>
-        <td>day, week, month, year, text, pass</td>
+        <td>day, week, weekq, month, year, quarter, text, pass</td>
         <td>day</td>
       </tr>
       <tr>
         <td>color</td>
         <td>图标颜色</td>
-        <td>red, green, pink, yellow, blue</td>
+        <td>red, green, pink, yellow, blue 或 颜色1+颜色2 渐变格式</td>
         <td>red</td>
       </tr>
       <tr>
@@ -373,16 +501,24 @@ app.get('/info', (req, res) => {
       <p><a href="/?type=week&color=blue" target="_blank">${req.protocol}://${req.get('host')}/?type=week&color=blue</a></p>
     </div>
     <div class="example">
-      <p>3. 显示绿色主题的自定义文字:</p>
+      <p>3. 显示蓝色到粉色渐变的季度:</p>
+      <p><a href="/?type=quarter&color=blue+pink" target="_blank">${req.protocol}://${req.get('host')}/?type=quarter&color=blue+pink</a></p>
+    </div>
+    <div class="example">
+      <p>4. 显示绿色主题的自定义文字:</p>
       <p><a href="/?type=text&content=笔记&color=green" target="_blank">${req.protocol}://${req.get('host')}/?type=text&content=笔记&color=green</a></p>
     </div>
     <div class="example">
-      <p>4. 显示距离2026年1月1日的倒计时:</p>
+      <p>5. 显示距离2026年1月1日的倒计时:</p>
       <p><a href="/?type=pass&date=2026-01-01" target="_blank">${req.protocol}://${req.get('host')}/?type=pass&date=2026-01-01</a></p>
     </div>
     <div class="example">
-      <p>5. 显示特定日期:</p>
+      <p>6. 显示特定日期:</p>
       <p><a href="/?date=2026-01-01" target="_blank">${req.protocol}://${req.get('host')}/?date=2026-01-01</a></p>
+    </div>
+    <div class="example">
+      <p>7. 显示带季度信息的周数:</p>
+      <p><a href="/?type=weekq" target="_blank">${req.protocol}://${req.get('host')}/?type=weekq</a></p>
     </div>
     
     <h2>在Notion中使用</h2>
@@ -407,8 +543,21 @@ app.get('/', (req, res) => {
   // 获取查询参数
   const type = req.query.type || 'day';
   const content = req.query.content || '';
-  const color = req.query.color || 'red';
+  
+  // 修复：从原始URL中获取color参数，处理+号问题
+  const colorParam = req.originalUrl.match(/color=([^&]+)/);
+  const color = colorParam ? decodeURIComponent(colorParam[1].replace(/\+/g, '%2B')) : 'red';
   const date = req.query.date || '';
+  
+  // // 添加日志输出
+  // console.log('请求参数:', {
+  //   originalUrl: req.originalUrl,
+  //   type,
+  //   content,
+  //   originalColor: req.query.color,
+  //   parsedColor: color,
+  //   date
+  // });
   
   // 生成SVG
   const result = generateSVG(type, content, color, date);
@@ -418,11 +567,13 @@ app.get('/', (req, res) => {
     return res.status(400).send(result.error);
   }
   
-  // 设置响应头并返回SVG
+  // 设置响应头
   res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
+  
+  // 直接发送结果，不进行重定向
   res.send(result);
 });
 
